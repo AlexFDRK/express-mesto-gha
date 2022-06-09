@@ -14,7 +14,15 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.findUserById = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      if (user){
+        res.send({ data: user });
+      } else {
+        res
+          .status(NOT_FOUND_CODE)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      }
+    })
     .catch((err) => {
       if (err.name === "CastError") {
         res
