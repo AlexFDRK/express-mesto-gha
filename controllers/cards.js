@@ -57,7 +57,7 @@ module.exports.likeCard = (req, res) => {
     .catch((err) => {
       if (err.name === "ReferenceError" || err.name === "CastError") {
         res
-          .status(NOT_FOUND_CODE)
+          .status(INCORRECT_DATA_CODE)
           .send({ message: "Запрашиваемая карточка не найдена" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
