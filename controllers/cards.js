@@ -12,12 +12,13 @@ module.exports.getCards = (_req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((delCard) => {
-      if (card) {
-        res.send({ data: delCard });
-      } else {
-        res.status(INCORRECT_DATA_CODE).send({ message: err.message });
-      }
+    .then((card) => {
+      res.send({ data: card });
+      // if (card) {
+      //   res.send({ data: card });
+      // } else {
+      //   res.status(INCORRECT_DATA_CODE).send({ message: err.message });
+      // }
     })
     .catch((err) => {
       if (err.name === "CastError") {
