@@ -55,9 +55,13 @@ module.exports.likeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "ReferenceError" || err.name === "CastError") {
+      if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      } else if (err.name === "ReferenceError") {
+        res
+          .status(NOT_FOUND_CODE)
           .send({ message: "Запрашиваемая карточка не найдена" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
@@ -79,7 +83,11 @@ module.exports.dislikeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "ReferenceError" || err.name === "CastError") {
+      if (err.name === "CastError") {
+        res
+          .status(INCORRECT_DATA_CODE)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      } else if (err.name === "ReferenceError") {
         res
           .status(NOT_FOUND_CODE)
           .send({ message: "Запрашиваемая карточка не найдена" });
