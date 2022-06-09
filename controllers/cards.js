@@ -12,14 +12,24 @@ module.exports.getCards = (_req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((delCard) => res.send({ data: delCard }))
+    .then((delCard) => {
+      if (card) {
+        res.send({ data: delCard });
+      } else {
+        res.status(INCORRECT_DATA_CODE).send({ message: err.message });
+      }
+    })
     .catch((err) => {
       if (err.name === "CastError") {
+        res
+          .status(INCORRECT_DATA_CODE)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      } else if (err.name === "ReferenceError") {
         res
           .status(NOT_FOUND_CODE)
           .send({ message: "Запрашиваемая карточка не найдена" });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
       }
     });
 };
