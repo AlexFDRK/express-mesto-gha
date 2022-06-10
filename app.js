@@ -24,7 +24,7 @@ app.use((req, _res, next) => {
 
 app.use("/users", require("./routers/users"));
 app.use("/cards", require("./routers/cards"));
-app.use("/", function (_req, res) {
+app.get("/", function (_req, res) {
   res.send({ message: "Main page" });
 });
 app.use("*", function (_req, res) {
