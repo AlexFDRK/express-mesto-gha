@@ -15,19 +15,19 @@ module.exports.getUsers = (req, res) => {
 module.exports.findUserById = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
-      if (user){
+      if (user) {
         res.send({ data: user });
       } else {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен пользователь с несуществующим в БД id" });
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен пользователь с некорректным id" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
       }
@@ -68,7 +68,7 @@ module.exports.patchMe = (req, res) => {
       } else if (err.name === "CastError") {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен пользователь с некорректным id" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
       }
@@ -89,7 +89,7 @@ module.exports.patchAvatar = (req, res) => {
       } else if (err.name === "CastError") {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен пользователь с некорректным id" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
       }

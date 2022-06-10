@@ -23,11 +23,11 @@ module.exports.deleteCard = (req, res) => {
       if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен несуществующий в БД id карточки" });
       } else if (err.name === "ReferenceError") {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен некорректный id карточки" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
       }
@@ -68,11 +68,11 @@ module.exports.likeCard = (req, res) => {
       if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен несуществующий в БД id карточки" });
       } else if (err.name === "ReferenceError") {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен некорректный id карточки" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
       }
@@ -96,11 +96,11 @@ module.exports.dislikeCard = (req, res) => {
       if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен несуществующий в БД id карточки" });
       } else if (err.name === "ReferenceError") {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемая карточка не найдена" });
+          .send({ message: "Запрошен некорректный id карточки" });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
       }
