@@ -24,10 +24,10 @@ app.use((req, _res, next) => {
 
 app.use("/users", require("./routers/users"));
 app.use("/cards", require("./routers/cards"));
-app.get("/", function (_req, res) {
+app.use("/", function (_req, res) {
   res.send({ message: "Main page" });
 });
-app.get("*", function (_req, res) {
+app.use("*", function (_req, res) {
   res
     .status(NOT_FOUND_CODE)
     .send({ message: "Error 404. Страница не найдена." });
