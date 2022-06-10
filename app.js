@@ -30,7 +30,7 @@ app.get("/", function (_req, res) {
 app.get("*", function (_req, res) {
   res
     .status(NOT_FOUND_CODE)
-    .send({ message: "Error 404. Страница не найдена." });
+    .send(JSON.parse('{"message": "Error 404. Страница не найдена."}'));
 });
 
 app.listen(PORT, () => {
