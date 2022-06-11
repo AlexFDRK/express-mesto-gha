@@ -5,23 +5,23 @@ const {
   SERVER_ERROR_TEXT,
   NO_ID_ERROR_TEXT,
   INCORRECT_ID_ERROR_TEXT,
-} = require("../constants/constants");
+} = require('../constants/constants');
 
-const User = require("../models/user");
+const user = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
-  User.find({})
+  user
+    .find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) =>
-      res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT })
-    );
+    .catch(() => res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT }));
 };
 
 module.exports.findUserById = (req, res) => {
-  User.findById(req.params.id)
-    .then((user) => {
-      if (user) {
-        res.send({ data: user });
+  user
+    .findById(req.params.id)
+    .then((_user) => {
+      if (_user) {
+        res.send({ data: _user });
       } else {
         res.status(NOT_FOUND_CODE).send({
           message: NO_ID_ERROR_TEXT + req.params.id,
@@ -29,7 +29,7 @@ module.exports.findUserById = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         res
           .status(INCORRECT_DATA_CODE)
           .send({ message: INCORRECT_ID_ERROR_TEXT });
@@ -42,16 +42,17 @@ module.exports.findUserById = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
-  User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+  user
+    .create({ name, about, avatar })
+    .then((_user) => res.send({ data: _user }))
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         const errorArr = [];
-        for (var key in err.errors) {
+        err.errors.each((key) => {
           errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
-        }
+        });
         res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
@@ -63,13 +64,10 @@ module.exports.patchMe = (req, res) => {
   const { name, about } = req.body;
   const _id = req.user;
 
-  User.findByIdAndUpdate(
-    _id,
-    { name, about },
-    { new: true, runValidators: true }
-  )
-    .then((user) => {
-      if (user) {
+  user
+    .findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
+    .then((_user) => {
+      if (_user) {
         res.send({ data: user });
       } else {
         res
@@ -78,18 +76,16 @@ module.exports.patchMe = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         const errorArr = [];
-        for (var key in err.errors) {
+        err.errors.each((key) => {
           errorArr.push(
-            `Для поля ${key}: Обнаруженна ошибка: ${err.errors[key]}`
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
-        }
+        });
         res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
-      } else if (err.name === "CastError") {
-        res
-          .status(NOT_FOUND_CODE)
-          .send({ message: INCORRECT_ID_ERROR_TEXT });
+      } else if (err.name === 'CastError') {
+        res.status(NOT_FOUND_CODE).send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
@@ -100,10 +96,11 @@ module.exports.patchAvatar = (req, res) => {
   const { avatar } = req.body;
   const _id = req.user;
 
-  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
-    .then((user) => {
-      if (user) {
-        res.send({ data: user });
+  user
+    .findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
+    .then((_user) => {
+      if (_user) {
+        res.send({ data: _user });
       } else {
         res
           .status(INCORRECT_DATA_CODE)
@@ -111,18 +108,16 @@ module.exports.patchAvatar = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         const errorArr = [];
-        for (var key in err.errors) {
+        err.errors.each((key) => {
           errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
-        }
+        });
         res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
-      } else if (err.name === "CastError") {
-        res
-          .status(NOT_FOUND_CODE)
-          .send({ message: INCORRECT_ID_ERROR_TEXT });
+      } else if (err.name === 'CastError') {
+        res.status(NOT_FOUND_CODE).send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }

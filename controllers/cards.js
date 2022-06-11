@@ -5,21 +5,23 @@ const {
   SERVER_ERROR_TEXT,
   NO_ID_ERROR_TEXT,
   INCORRECT_ID_ERROR_TEXT,
-} = require("../constants/constants");
+} = require('../constants/constants');
 
-const Card = require("../models/card");
+const card = require('../models/card');
 
 module.exports.getCards = (_req, res) => {
-  Card.find({})
+  card
+    .find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(500).send({ message: SERVER_ERROR_TEXT }));
+    .catch(() => res.status(500).send({ message: SERVER_ERROR_TEXT }));
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      if (card) {
-        res.send({ data: card });
+  card
+    .findByIdAndRemove(req.params.cardId)
+    .then((_card) => {
+      if (_card) {
+        res.send({ data: _card });
       } else {
         res.status(NOT_FOUND_CODE).send({
           message: NO_ID_ERROR_TEXT + req.params.cardId,
@@ -27,7 +29,7 @@ module.exports.deleteCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         res
           .status(INCORRECT_DATA_CODE)
           .send({ message: INCORRECT_ID_ERROR_TEXT });
@@ -41,16 +43,17 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const _id = req.user;
 
-  Card.create({ name, link, owner: _id })
-    .then((card) => res.send({ data: card }))
+  card
+    .create({ name, link, owner: _id })
+    .then((_card) => res.send({ data: _card }))
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         const errorArr = [];
-        for (var key in err.errors) {
+        err.errors.each((key) => {
           errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
-        }
+        });
         res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
@@ -59,14 +62,15 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.likeCard = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true }
-  )
-    .then((card) => {
-      if (card) {
-        res.send({ data: card });
+  card
+    .findByIdAndUpdate(
+      req.params.cardId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true },
+    )
+    .then((_card) => {
+      if (_card) {
+        res.send({ data: _card });
       } else {
         res
           .status(NOT_FOUND_CODE)
@@ -74,7 +78,7 @@ module.exports.likeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         res
           .status(INCORRECT_DATA_CODE)
           .send({ message: INCORRECT_ID_ERROR_TEXT });
@@ -85,14 +89,15 @@ module.exports.likeCard = (req, res) => {
 };
 
 module.exports.dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true }
-  )
-    .then((card) => {
-      if (card) {
-        res.send({ data: card });
+  card
+    .findByIdAndUpdate(
+      req.params.cardId,
+      { $pull: { likes: req.user._id } },
+      { new: true },
+    )
+    .then((_card) => {
+      if (_card) {
+        res.send({ data: _card });
       } else {
         res
           .status(NOT_FOUND_CODE)
@@ -100,7 +105,7 @@ module.exports.dislikeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         res
           .status(INCORRECT_DATA_CODE)
           .send({ message: INCORRECT_ID_ERROR_TEXT });
