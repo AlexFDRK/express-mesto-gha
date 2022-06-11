@@ -52,7 +52,7 @@ module.exports.createUser = (req, res) => {
             `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
           );
         }
-        res.status(INCORRECT_DATA_CODE).send({ message: errorArr });
+        res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
@@ -85,7 +85,7 @@ module.exports.patchMe = (req, res) => {
             `Для поля ${key}: Обнаруженна ошибка: ${err.errors[key]}`
           );
         }
-        res.status(INCORRECT_DATA_CODE).send({ message: errorArr });
+        res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
       } else if (err.name === "CastError") {
         res
           .status(NOT_FOUND_CODE)
@@ -118,7 +118,7 @@ module.exports.patchAvatar = (req, res) => {
             `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
           );
         }
-        res.status(INCORRECT_DATA_CODE).send({ message: errorArr });
+        res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
       } else if (err.name === "CastError") {
         res
           .status(NOT_FOUND_CODE)
