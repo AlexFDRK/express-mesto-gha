@@ -4,6 +4,7 @@ const DEFAULT_ERROR_CODE = 500;
 const SERVER_ERROR_TEXT = "Произошла ошибка на сервере";
 const NO_ID_ERROR_TEXT = "В БД отсутствуют записи с id: ";
 const INCORRECT_ID_ERROR_TEXT = "Запрошены данные с некорректным id";
+const ERROR_404_TEXT = "Error 404. Страница не найдена. Ꙭ";
 
 module.exports = {
   INCORRECT_DATA_CODE,
@@ -12,4 +13,5 @@ module.exports = {
   SERVER_ERROR_TEXT,
   NO_ID_ERROR_TEXT,
   INCORRECT_ID_ERROR_TEXT,
+  ERROR_404_TEXT
 };

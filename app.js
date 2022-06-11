@@ -1,4 +1,4 @@
-const NOT_FOUND_CODE = require("./constants/constants");
+const { NOT_FOUND_CODE, ERROR_404_TEXT } = require("./constants/constants");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -27,9 +27,9 @@ app.get("/", function (_req, res) {
 app.use("*", function (_req, res) {
   res
     .status(NOT_FOUND_CODE)
-    .send({ message: "Error 404. Страница не найдена." });
+    .send({ message: ERROR_404_TEXT });
 });
 
 app.listen(PORT, () => {
-  console.log("Listeninng port 3000");
+  console.log(`Listeninng port ${PORT}`);
 });
