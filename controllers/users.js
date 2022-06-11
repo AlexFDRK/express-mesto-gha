@@ -1,6 +1,11 @@
-const INCORRECT_DATA_CODE = 400;
-const NOT_FOUND_CODE = 404;
-const DEFAULT_ERROR_CODE = 500;
+const {
+  INCORRECT_DATA_CODE,
+  NOT_FOUND_CODE,
+  DEFAULT_ERROR_CODE,
+  SERVER_ERROR_TEXT,
+  NO_ID_ERROR_TEXT,
+  INCORRECT_ID_ERROR_TEXT,
+} = require("../constants/constants");
 
 const User = require("../models/user");
 
@@ -8,7 +13,7 @@ module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch((err) =>
-      res.status(DEFAULT_ERROR_CODE).send({ message: err.message })
+      res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT })
     );
 };
 
@@ -18,18 +23,18 @@ module.exports.findUserById = (req, res) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res
-          .status(NOT_FOUND_CODE)
-          .send({ message: "Запрошен пользователь с несуществующим в БД id" });
+        res.status(NOT_FOUND_CODE).send({
+          message: NO_ID_ERROR_TEXT + req.params.id,
+        });
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Запрошен пользователь с некорректным id" });
+          .send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };
@@ -41,11 +46,15 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res
-          .status(INCORRECT_DATA_CODE)
-          .send({ message: "Не заполнены обязательные поля" });
+        const errorArr = [];
+        for (var key in err.errors) {
+          errorArr.push(
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
+          );
+        }
+        res.status(INCORRECT_DATA_CODE).send({ message: errorArr });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };
@@ -59,18 +68,30 @@ module.exports.patchMe = (req, res) => {
     { name, about },
     { new: true, runValidators: true }
   )
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === "ValidationError") {
+    .then((user) => {
+      if (user) {
+        res.send({ data: user });
+      } else {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Не заполнены обязательные поля" });
+          .send({ message: NO_ID_ERROR_TEXT + _id });
+      }
+    })
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        const errorArr = [];
+        for (var key in err.errors) {
+          errorArr.push(
+            `Для поля ${key}: Обнаруженна ошибка: ${err.errors[key]}`
+          );
+        }
+        res.status(INCORRECT_DATA_CODE).send({ message: errorArr });
       } else if (err.name === "CastError") {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрошен пользователь с некорректным id" });
+          .send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };
@@ -80,18 +101,30 @@ module.exports.patchAvatar = (req, res) => {
   const _id = req.user;
 
   User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === "ValidationError") {
+    .then((user) => {
+      if (user) {
+        res.send({ data: user });
+      } else {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Не заполнены обязательные поля" });
+          .send({ message: NO_ID_ERROR_TEXT + _id });
+      }
+    })
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        const errorArr = [];
+        for (var key in err.errors) {
+          errorArr.push(
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
+          );
+        }
+        res.status(INCORRECT_DATA_CODE).send({ message: errorArr });
       } else if (err.name === "CastError") {
         res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрошен пользователь с некорректным id" });
+          .send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };

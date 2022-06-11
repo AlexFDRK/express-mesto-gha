@@ -1,13 +1,18 @@
-const INCORRECT_DATA_CODE = 400;
-const NOT_FOUND_CODE = 404;
-const DEFAULT_ERROR_CODE = 500;
+const {
+  INCORRECT_DATA_CODE,
+  NOT_FOUND_CODE,
+  DEFAULT_ERROR_CODE,
+  SERVER_ERROR_TEXT,
+  NO_ID_ERROR_TEXT,
+  INCORRECT_ID_ERROR_TEXT,
+} = require("../constants/constants");
 
 const Card = require("../models/card");
 
 module.exports.getCards = (_req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: SERVER_ERROR_TEXT }));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -16,29 +21,53 @@ module.exports.deleteCard = (req, res) => {
       if (card) {
         res.send({ data: card });
       } else {
-        res.status(INCORRECT_DATA_CODE).send({ message: err.message });
+        res.status(NOT_FOUND_CODE).send({
+          message: NO_ID_ERROR_TEXT + req.params.cardId,
+        });
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Запрошен несуществующий в БД id карточки" });
-      } else if (err.name === "ReferenceError") {
-        res
-          .status(NOT_FOUND_CODE)
-          .send({ message: "Запрошен некорректный id карточки" });
+          .send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };
 
+// module.exports.deleteCard = (req, res) => {
+//   Card.findByIdAndRemove(req.params.cardId)
+//     .then((card) => {
+//       if (card) {
+//         res.send({ data: card });
+//       } else {
+//         res
+//           .status(INCORRECT_DATA_CODE)
+//           .send(INCORRECT_ID_ERROR_TEXT);
+//       }
+//     })
+//     .catch((err) => {
+//       if (err.name === "CastError") {
+//         res
+//           .status(INCORRECT_DATA_CODE)
+//           .send({ message: "Запрошен несуществующий в БД id карточки" });
+//       } else if (err.name === "ReferenceError") {
+//         res
+//           .status(NOT_FOUND_CODE)
+//           .send({ message: INCORRECT_ID_ERROR_TEXT });
+//       } else {
+//         res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
+//       }
+//     });
+// };
+
 module.exports.createCard = (req, res) => {
-  const { name, link, likes, createdAt } = req.body;
+  const { name, link } = req.body;
   const _id = req.user;
 
-  Card.create({ name, link, owner: _id, likes, createdAt })
+  Card.create({ name, link, owner: _id })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -46,7 +75,7 @@ module.exports.createCard = (req, res) => {
           .status(INCORRECT_DATA_CODE)
           .send({ message: "Не заполнены обязательные поля" });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };
@@ -61,20 +90,20 @@ module.exports.likeCard = (req, res) => {
       if (card) {
         res.send({ data: card });
       } else {
-        res.status(INCORRECT_DATA_CODE).send({ message: err.message });
+        res.status(INCORRECT_DATA_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
         res
           .status(INCORRECT_DATA_CODE)
-          .send({ message: "Запрошен несуществующий в БД id карточки" });
+          .send({ message: INCORRECT_ID_ERROR_TEXT });
       } else if (err.name === "ReferenceError") {
         res
           .status(NOT_FOUND_CODE)
           .send({ message: "Запрошен некорректный id карточки" });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };
@@ -89,7 +118,7 @@ module.exports.dislikeCard = (req, res) => {
       if (card) {
         res.send({ data: card });
       } else {
-        res.status(INCORRECT_DATA_CODE).send({ message: err.message });
+        res.status(INCORRECT_DATA_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     })
     .catch((err) => {
@@ -98,11 +127,9 @@ module.exports.dislikeCard = (req, res) => {
           .status(INCORRECT_DATA_CODE)
           .send({ message: "Запрошен несуществующий в БД id карточки" });
       } else if (err.name === "ReferenceError") {
-        res
-          .status(NOT_FOUND_CODE)
-          .send({ message: "Запрошен некорректный id карточки" });
+        res.status(NOT_FOUND_CODE).send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: err.message });
+        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
     });
 };

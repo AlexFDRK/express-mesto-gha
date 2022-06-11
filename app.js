@@ -1,13 +1,10 @@
-const NOT_FOUND_CODE = 404;
-const path = require("path");
+const NOT_FOUND_CODE = require("./constants/constants");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
-
-// app.use(express.static(path.join(__dirname, "public")));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
