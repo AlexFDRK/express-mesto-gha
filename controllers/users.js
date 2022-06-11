@@ -48,7 +48,8 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const errorArr = [];
-        err.errors.each((key) => {
+        const _errors = Object.values(err.errors);
+        _errors.forEach((key) => {
           errorArr.push(
             `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
@@ -78,7 +79,8 @@ module.exports.patchMe = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const errorArr = [];
-        err.errors.each((key) => {
+        const _errors = Object.values(err.errors);
+        _errors.forEach((key) => {
           errorArr.push(
             `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
@@ -110,7 +112,8 @@ module.exports.patchAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const errorArr = [];
-        err.errors.each((key) => {
+        const _errors = Object.values(err.errors);
+        _errors.forEach((key) => {
           errorArr.push(
             `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
