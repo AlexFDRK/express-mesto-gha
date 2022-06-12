@@ -5,6 +5,7 @@ const {
   SERVER_ERROR_TEXT,
   NO_ID_ERROR_TEXT,
   INCORRECT_ID_ERROR_TEXT,
+  ERROR_404_CODE,
 } = require('../constants/constants');
 
 const user = require('../models/user');
@@ -21,7 +22,7 @@ module.exports.findUserById = (req, res) => {
     .findById(req.params.id)
     .then((_user) => {
       if (!_user) {
-        res.status(INCORRECT_DATA_CODE).send({
+        res.status(ERROR_404_CODE).send({
           message: `${NO_ID_ERROR_TEXT} ${req.params.id}`,
         });
       } else {
@@ -115,7 +116,7 @@ module.exports.patchAvatar = (req, res) => {
         const _errors = Object.values(err.errors);
         _errors.forEach((key) => {
           errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
           );
         });
         res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });

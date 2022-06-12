@@ -1,3 +1,4 @@
+const { Error } = require('mongoose');
 const {
   INCORRECT_DATA_CODE,
   NOT_FOUND_CODE,
@@ -5,6 +6,7 @@ const {
   SERVER_ERROR_TEXT,
   NO_ID_ERROR_TEXT,
   INCORRECT_ID_ERROR_TEXT,
+  ERROR_404_CODE
 } = require('../constants/constants');
 
 const card = require('../models/card');
@@ -23,7 +25,7 @@ module.exports.deleteCard = (req, res) => {
       if (_card) {
         res.send({ data: _card });
       } else {
-        res.status(NOT_FOUND_CODE).send({
+        res.status(ERROR_404_CODE).send({
           message: `${NO_ID_ERROR_TEXT} ${req.params.cardId}`,
         });
       }
@@ -74,11 +76,12 @@ module.exports.likeCard = (req, res) => {
         res.send({ data: _card });
       } else {
         res
-          .status(NOT_FOUND_CODE)
+          .status(ERROR_404_CODE)
           .send({ message: `${NO_ID_ERROR_TEXT} ${req.params.cardId}` });
       }
     })
     .catch((err) => {
+      console.log(err);
       if (err.name === 'CastError') {
         res
           .status(INCORRECT_DATA_CODE)
@@ -101,7 +104,7 @@ module.exports.dislikeCard = (req, res) => {
         res.send({ data: _card });
       } else {
         res
-          .status(NOT_FOUND_CODE)
+          .status(ERROR_404_CODE)
           .send({ message: `${NO_ID_ERROR_TEXT} ${req.params.cardId}` });
       }
     })
