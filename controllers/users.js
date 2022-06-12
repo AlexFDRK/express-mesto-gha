@@ -70,7 +70,7 @@ module.exports.patchMe = (req, res) => {
     .findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
     .then((_user) => {
       if (_user) {
-        res.send({ data: user });
+        res.send({ data: _user });
       } else {
         res
           .status(INCORRECT_DATA_CODE)
@@ -116,7 +116,7 @@ module.exports.patchAvatar = (req, res) => {
         const _errors = Object.values(err.errors);
         _errors.forEach((key) => {
           errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`
+            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
           );
         });
         res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });

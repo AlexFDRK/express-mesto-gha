@@ -1,12 +1,10 @@
-const { Error } = require('mongoose');
 const {
   INCORRECT_DATA_CODE,
-  NOT_FOUND_CODE,
   DEFAULT_ERROR_CODE,
   SERVER_ERROR_TEXT,
   NO_ID_ERROR_TEXT,
   INCORRECT_ID_ERROR_TEXT,
-  ERROR_404_CODE
+  ERROR_404_CODE,
 } = require('../constants/constants');
 
 const card = require('../models/card');
