@@ -21,9 +21,9 @@ module.exports.getCards = (_req, res) => {
 module.exports.deleteCard = (req, res) => {
   card
     .findByIdAndRemove(req.params.cardId)
-    .then((_card) => {
-      if (_card) {
-        res.send({ data: _card });
+    .then((data) => {
+      if (data) {
+        res.send({ data });
       } else {
         res.status(ERROR_404_CODE).send({
           message: `${NO_ID_ERROR_TEXT} ${req.params.cardId}`,
@@ -47,7 +47,7 @@ module.exports.createCard = (req, res) => {
 
   card
     .create({ name, link, owner: _id })
-    .then((_card) => res.send({ data: _card }))
+    .then((data) => res.send({ data }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(INCORRECT_DATA_CODE).send(validate(err));
@@ -64,9 +64,9 @@ module.exports.likeCard = (req, res) => {
       { $addToSet: { likes: req.user._id } },
       { new: true },
     )
-    .then((_card) => {
-      if (_card) {
-        res.send({ data: _card });
+    .then((data) => {
+      if (data) {
+        res.send({ data });
       } else {
         res
           .status(ERROR_404_CODE)
@@ -92,9 +92,9 @@ module.exports.dislikeCard = (req, res) => {
       { $pull: { likes: req.user._id } },
       { new: true },
     )
-    .then((_card) => {
-      if (_card) {
-        res.send({ data: _card });
+    .then((data) => {
+      if (data) {
+        res.send({ data });
       } else {
         res
           .status(ERROR_404_CODE)

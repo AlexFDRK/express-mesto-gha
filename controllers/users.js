@@ -22,13 +22,13 @@ module.exports.getUsers = (req, res) => {
 module.exports.findUserById = (req, res) => {
   user
     .findById(req.params.id)
-    .then((_user) => {
-      if (!_user) {
+    .then((data) => {
+      if (!data) {
         res.status(ERROR_404_CODE).send({
           message: `${NO_ID_ERROR_TEXT} ${req.params.id}`,
         });
       } else {
-        res.send({ data: _user });
+        res.send({ data });
       }
     })
     .catch((err) => {
@@ -47,7 +47,7 @@ module.exports.createUser = (req, res) => {
 
   user
     .create({ name, about, avatar })
-    .then((_user) => res.send({ data: _user }))
+    .then((data) => res.send({ data }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(INCORRECT_DATA_CODE).send(validate(err));
@@ -63,9 +63,9 @@ module.exports.patchMe = (req, res) => {
 
   user
     .findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
-    .then((_user) => {
-      if (_user) {
-        res.send({ data: _user });
+    .then((data) => {
+      if (data) {
+        res.send({ data });
       } else {
         res
           .status(INCORRECT_DATA_CODE)
@@ -89,9 +89,9 @@ module.exports.patchAvatar = (req, res) => {
 
   user
     .findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
-    .then((_user) => {
-      if (_user) {
-        res.send({ data: _user });
+    .then((data) => {
+      if (data) {
+        res.send({ data });
       } else {
         res
           .status(INCORRECT_DATA_CODE)
