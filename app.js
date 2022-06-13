@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const express = require('express');
-const { ERROR_404_CODE, ERROR_404_TEXT } = require('./constants/constants');
+const { ERROR_404_CODE, ERROR_404_TEXT } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
 const app = express();

@@ -6,7 +6,9 @@ const {
   NO_ID_ERROR_TEXT,
   INCORRECT_ID_ERROR_TEXT,
   ERROR_404_CODE,
-} = require('../constants/constants');
+} = require('../utils/constants');
+
+const { validate } = require('../utils/tools');
 
 const user = require('../models/user');
 
@@ -48,14 +50,7 @@ module.exports.createUser = (req, res) => {
     .then((_user) => res.send({ data: _user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        const errorArr = [];
-        const _errors = Object.values(err.errors);
-        _errors.forEach((key) => {
-          errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
-          );
-        });
-        res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
+        res.status(INCORRECT_DATA_CODE).send(validate(err));
       } else {
         res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
       }
@@ -79,14 +74,7 @@ module.exports.patchMe = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        const errorArr = [];
-        const _errors = Object.values(err.errors);
-        _errors.forEach((key) => {
-          errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
-          );
-        });
-        res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
+        res.status(INCORRECT_DATA_CODE).send(validate(err));
       } else if (err.name === 'CastError') {
         res.status(NOT_FOUND_CODE).send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {
@@ -112,14 +100,7 @@ module.exports.patchAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        const errorArr = [];
-        const _errors = Object.values(err.errors);
-        _errors.forEach((key) => {
-          errorArr.push(
-            `Для поля ${key}: Ошибка валидации: ${err.errors[key]}`,
-          );
-        });
-        res.status(INCORRECT_DATA_CODE).send({ message: errorArr[0] });
+        res.status(INCORRECT_DATA_CODE).send(validate(err));
       } else if (err.name === 'CastError') {
         res.status(NOT_FOUND_CODE).send({ message: INCORRECT_ID_ERROR_TEXT });
       } else {

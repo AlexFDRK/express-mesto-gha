@@ -12,6 +12,9 @@ node_modules
 # Optional REPL history
 .DS_Store
 .idea
-.vscode 
+.vscode
+
+# Additional modules
+.prettierrc
 
 README.md
