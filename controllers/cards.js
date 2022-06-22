@@ -1,43 +1,35 @@
 const {
-  INCORRECT_DATA_CODE,
-  DEFAULT_ERROR_CODE,
-  SERVER_ERROR_TEXT,
-  NO_ID_ERROR_TEXT,
-  INCORRECT_ID_ERROR_TEXT,
   ERROR_404_CODE,
 } = require('../utils/constants');
 
-const { validate } = require('../utils/tools');
-
 const card = require('../models/card');
+const { errorHandler } = require('../middlewares/errorHandler');
 
 module.exports.getCards = (_req, res) => {
   card
     .find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: SERVER_ERROR_TEXT }));
+    .catch(() => errorHandler(res));
 };
 
 module.exports.deleteCard = (req, res) => {
   card
-    .findByIdAndRemove(req.params.cardId)
+    .findOne({ _id: req.params.cardId })
     .then((data) => {
-      if (data) {
-        res.send({ data });
-      } else {
-        res.status(ERROR_404_CODE).send({
-          message: `${NO_ID_ERROR_TEXT} ${req.params.cardId}`,
+      if (data && data.owner === req.user) {
+        card.findByIdAndRemove(req.params.cardId).then((delData) => {
+          res.send({ delData });
         });
+      } else if (data && data.owner !== req.user) {
+        res
+          .status(ERROR_404_CODE)
+          .send({ message: 'Нельзя удалять карточку чужого пользователя' });
+      } else {
+        errorHandler(res, undefined, req.params.cardId);
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res
-          .status(INCORRECT_DATA_CODE)
-          .send({ message: INCORRECT_ID_ERROR_TEXT });
-      } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
-      }
+    .catch(() => {
+      errorHandler(res);
     });
 };
 
@@ -49,11 +41,7 @@ module.exports.createCard = (req, res) => {
     .create({ name, link, owner: _id })
     .then((data) => res.send({ data }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(INCORRECT_DATA_CODE).send(validate(err));
-      } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
-      }
+      errorHandler(res, err);
     });
 };
 
@@ -68,20 +56,11 @@ module.exports.likeCard = (req, res) => {
       if (data) {
         res.send({ data });
       } else {
-        res
-          .status(ERROR_404_CODE)
-          .send({ message: `${NO_ID_ERROR_TEXT} ${req.params.cardId}` });
+        errorHandler(res, undefined, req.params.cardId);
       }
     })
     .catch((err) => {
-      console.log(err);
-      if (err.name === 'CastError') {
-        res
-          .status(INCORRECT_DATA_CODE)
-          .send({ message: INCORRECT_ID_ERROR_TEXT });
-      } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
-      }
+      errorHandler(err);
     });
 };
 
@@ -96,18 +75,10 @@ module.exports.dislikeCard = (req, res) => {
       if (data) {
         res.send({ data });
       } else {
-        res
-          .status(ERROR_404_CODE)
-          .send({ message: `${NO_ID_ERROR_TEXT} ${req.params.cardId}` });
+        errorHandler(res, undefined, req.params.cardId);
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res
-          .status(INCORRECT_DATA_CODE)
-          .send({ message: INCORRECT_ID_ERROR_TEXT });
-      } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
-      }
+      errorHandler(res, err);
     });
 };

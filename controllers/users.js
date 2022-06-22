@@ -1,22 +1,11 @@
-const {
-  INCORRECT_DATA_CODE,
-  NOT_FOUND_CODE,
-  DEFAULT_ERROR_CODE,
-  SERVER_ERROR_TEXT,
-  NO_ID_ERROR_TEXT,
-  INCORRECT_ID_ERROR_TEXT,
-  ERROR_404_CODE,
-} = require('../utils/constants');
-
-const { validate } = require('../utils/tools');
-
 const user = require('../models/user');
+const errorHandler = require('../middlewares/errorHandler');
 
 module.exports.getUsers = (req, res) => {
   user
     .find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT }));
+    .catch(() => errorHandler(res));
 };
 
 module.exports.findUserById = (req, res) => {
@@ -24,36 +13,29 @@ module.exports.findUserById = (req, res) => {
     .findById(req.params.id)
     .then((data) => {
       if (!data) {
-        res.status(ERROR_404_CODE).send({
-          message: `${NO_ID_ERROR_TEXT} ${req.params.id}`,
-        });
+        errorHandler(res, undefined, req.params.id);
       } else {
         res.send({ data });
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res
-          .status(INCORRECT_DATA_CODE)
-          .send({ message: INCORRECT_ID_ERROR_TEXT });
-      } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
-      }
+      errorHandler(res, err);
     });
 };
 
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-
+module.exports.getMe = (req, res) => {
   user
-    .create({ name, about, avatar })
-    .then((data) => res.send({ data }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(INCORRECT_DATA_CODE).send(validate(err));
+    .findById(req.user)
+    .select('-password')
+    .then((data) => {
+      if (!data) {
+        errorHandler(res, undefined, req.params.id);
       } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
+        res.send({ data });
       }
+    })
+    .catch((err) => {
+      errorHandler(res, err);
     });
 };
 
@@ -67,19 +49,11 @@ module.exports.patchMe = (req, res) => {
       if (data) {
         res.send({ data });
       } else {
-        res
-          .status(INCORRECT_DATA_CODE)
-          .send({ message: `${NO_ID_ERROR_TEXT} ${req.params.id}` });
+        errorHandler(res, undefined, req.params.id);
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(INCORRECT_DATA_CODE).send(validate(err));
-      } else if (err.name === 'CastError') {
-        res.status(NOT_FOUND_CODE).send({ message: INCORRECT_ID_ERROR_TEXT });
-      } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
-      }
+      errorHandler(res, err);
     });
 };
 
@@ -93,18 +67,10 @@ module.exports.patchAvatar = (req, res) => {
       if (data) {
         res.send({ data });
       } else {
-        res
-          .status(INCORRECT_DATA_CODE)
-          .send({ message: `${NO_ID_ERROR_TEXT} ${req.params.id}` });
+        errorHandler(res, undefined, req.params.id);
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(INCORRECT_DATA_CODE).send(validate(err));
-      } else if (err.name === 'CastError') {
-        res.status(NOT_FOUND_CODE).send({ message: INCORRECT_ID_ERROR_TEXT });
-      } else {
-        res.status(DEFAULT_ERROR_CODE).send({ message: SERVER_ERROR_TEXT });
-      }
+      errorHandler(res, err);
     });
 };
