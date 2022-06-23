@@ -5,7 +5,7 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const user = require('../models/user');
 
-const { errorHandler, errorHandler2 } = require('../middlewares/errorHandler');
+const { errorHandler } = require('../middlewares/errorHandler');
 
 const {
   ERROR_401_CODE,
