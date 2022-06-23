@@ -83,8 +83,6 @@ module.exports.createUser = (req, res) => {
         });
     })
     .catch((err) => {
-      console.log(err);
       errorHandler(res, err);
-      router.use(errorHandler2);
     });
 };

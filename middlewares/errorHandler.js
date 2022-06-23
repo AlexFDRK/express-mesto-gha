@@ -12,6 +12,8 @@ let status;
 let message;
 
 const errorHandler = (res, err, id) => {
+  console.log({ err, id });
+
   if (!err && id) {
     status = ERROR_404_CODE;
     message = `${NO_ID_ERROR_TEXT} ${id}`;

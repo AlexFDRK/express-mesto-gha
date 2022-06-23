@@ -45,7 +45,7 @@ module.exports.createCard = (req, res) => {
     });
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   card
     .findByIdAndUpdate(
       req.params.cardId,
@@ -56,12 +56,13 @@ module.exports.likeCard = (req, res) => {
       if (data) {
         res.send({ data });
       } else {
-        errorHandler(res, undefined, req.params.cardId);
+        // errorHandler(res, undefined, req.params.cardId);
+        next(new Error(req.params.cardId));
       }
-    })
-    .catch((err) => {
-      errorHandler(err);
     });
+    // .catch((err) => {
+    //   errorHandler(err);
+    // });
 };
 
 module.exports.dislikeCard = (req, res) => {
