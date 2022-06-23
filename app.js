@@ -31,7 +31,16 @@ app.post(
   }),
   login,
 );
-app.post('/signup', createUser);
+
+app.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().required().min(2),
+    }),
+  }),
+  createUser,
+);
 
 app.use(auth);
 
