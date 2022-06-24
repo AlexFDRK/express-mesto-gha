@@ -22,7 +22,7 @@ app.post(
   '/signin',
   celebrate({
     body: Joi.object().keys({
-      email: Joi.string().email({
+      email: Joi.string().required().email({
         minDomainSegments: 2,
         tlds: { allow: ['com', 'net', 'ru'] },
       }),
