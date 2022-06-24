@@ -13,7 +13,7 @@ const auth = (req, res, next) => {
   let payload;
   try {
     payload = jwt.verify(token, JWT_SECRET);
-  } catch (err) {
+  } catch {
     return next(new СustomError('Ошибочный токен', 401));
   }
   req.user = payload;

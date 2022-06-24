@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 const user = require('../models/user');
+const СustomError = require('../utils/customError');
 
 const {
   ERROR_401_CODE,
@@ -43,7 +44,7 @@ module.exports.login = (req, res, next) => {
             .status(200)
             .send({ email: currentUser.email, name: currentUser.name });
         }
-        return res.status(ERROR_403_CODE).send({ message: INCORRECT_PASSWORD });
+        return next(new СustomError('Ошибочный пароль', 403));
       });
     })
     .catch((err) => next(err));
@@ -63,7 +64,14 @@ module.exports.createUser = (req, res, next) => {
           email,
           password: hash,
         })
-        .then((data) => res.send({ data }))
+        .then((data) =>
+          res.send({
+            name: data.name,
+            about: data.about,
+            avatar: data.avatar,
+            email: data.email,
+          })
+        )
         .catch((err) => next(err));
     })
     .catch((err) => next(err));
