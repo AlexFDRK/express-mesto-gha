@@ -65,14 +65,15 @@ module.exports.createUser = (req, res, next) => {
           password: hash,
         })
         .then((data) =>
-          res.send({
-            name: data.name,
-            about: data.about,
-            avatar: data.avatar,
-            email: data.email,
-          })
+          res
+            .send({
+              name: data.name,
+              about: data.about,
+              avatar: data.avatar,
+              email: data.email,
+            })
         )
-        .catch((err) => next(err));
+        .catch((err) => next(new СustomError(err, 409)));
     })
     .catch((err) => next(err));
 };
