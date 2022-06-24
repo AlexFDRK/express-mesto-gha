@@ -3,8 +3,6 @@ const { JWT_SECRET } = require('../utils/constants');
 const СustomError = require('../utils/customError');
 
 const auth = (req, res, next) => {
-  console.log('auth');
-
   const { cookies } = req;
   if (!cookies) {
     return next(new СustomError('Неуспешная авторизация', 403));

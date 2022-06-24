@@ -1,7 +1,3 @@
-const {
-  ERROR_404_CODE,
-} = require('../utils/constants');
-
 const card = require('../models/card');
 const { errorHandler } = require('../middlewares/errorHandler');
 
@@ -22,7 +18,7 @@ module.exports.deleteCard = (req, res, next) => {
         });
       } else if (data && data.owner !== req.user) {
         res
-          .status(ERROR_404_CODE)
+          .status(404)
           .send({ message: 'Нельзя удалять карточку чужого пользователя' });
       } else {
         next(req.params.cardId);

@@ -1,7 +1,7 @@
 const user = require('../models/user');
+const СustomError = require('../utils/customError');
 
 module.exports.getUsers = (req, res, next) => {
-  console.log('getUsers');
   user
     .find({})
     .then((users) => res.send({ data: users }))
@@ -13,7 +13,7 @@ module.exports.findUserById = (req, res, next) => {
     .findById(req.params.id)
     .then((data) => {
       if (!data) {
-        next(new Error(req.params.cardId));
+        next(new СustomError(`Запрошены данные с некорректным id ${req.params.id}`, 404));
       } else {
         res.send({ data });
       }
