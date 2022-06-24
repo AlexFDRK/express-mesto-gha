@@ -1,17 +1,20 @@
 const jwt = require('jsonwebtoken');
-const { ERROR_401_CODE, JWT_SECRET } = require('../utils/constants');
+const { JWT_SECRET } = require('../utils/constants');
+const СustomError = require('../utils/customError');
 
 const auth = (req, res, next) => {
+  console.log('auth');
+
   const { cookies } = req;
   if (!cookies) {
-    return res.status(403).send({ error: 'Неуспешная авторизация' });
+    return next(new СustomError('Неуспешная авторизация', 403));
   }
   const token = cookies.jwt;
   let payload;
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return res.status(ERROR_401_CODE).send({ error: 'Ошибочный токен' });
+    return next(new СustomError('Ошибочный токен', 401));
   }
   req.user = payload;
 

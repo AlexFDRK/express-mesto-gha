@@ -12,7 +12,7 @@ module.exports.getCards = (_req, res) => {
     .catch(() => errorHandler(res));
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   card
     .findOne({ _id: req.params.cardId })
     .then((data) => {
@@ -25,24 +25,20 @@ module.exports.deleteCard = (req, res) => {
           .status(ERROR_404_CODE)
           .send({ message: 'Нельзя удалять карточку чужого пользователя' });
       } else {
-        errorHandler(res, undefined, req.params.cardId);
+        next(req.params.cardId);
       }
     })
-    .catch(() => {
-      errorHandler(res);
-    });
+    .catch((err) => next(err));
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const _id = req.user;
 
   card
     .create({ name, link, owner: _id })
     .then((data) => res.send({ data }))
-    .catch((err) => {
-      errorHandler(res, err);
-    });
+    .catch((err) => next(err));
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -56,16 +52,13 @@ module.exports.likeCard = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        // errorHandler(res, undefined, req.params.cardId);
-        next(new Error(req.params.cardId));
+        next(req.params.cardId);
       }
-    });
-    // .catch((err) => {
-    //   errorHandler(err);
-    // });
+    })
+    .catch((err) => next(err));
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   card
     .findByIdAndUpdate(
       req.params.cardId,
@@ -76,10 +69,8 @@ module.exports.dislikeCard = (req, res) => {
       if (data) {
         res.send({ data });
       } else {
-        errorHandler(res, undefined, req.params.cardId);
+        next(req.params.cardId);
       }
     })
-    .catch((err) => {
-      errorHandler(res, err);
-    });
+    .catch((err) => next(err));
 };

@@ -29,7 +29,7 @@ app.post(
       password: Joi.string().required().min(2),
     }),
   }),
-  login
+  login,
 );
 
 app.post(
@@ -45,10 +45,9 @@ app.post(
       password: Joi.string().required().min(2),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string()
-        .pattern(
-          /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/
-        ),
+      avatar: Joi.string().pattern(
+        /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/,
+      ),
     }),
   }),
   createUser,
@@ -70,9 +69,13 @@ app.use('*', (_req, res) => {
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  res
-    .status(500)
-    .send({ message: 'На сервере произошла ошибка!!!!!!!!!!!!!!!!!!!!!' });
+  const { statusCode = 500, message } = err;
+  console.log(statusCode);
+  console.log(message);
+
+  res.status(statusCode).send({
+    message,
+  });
   next();
 });
 
