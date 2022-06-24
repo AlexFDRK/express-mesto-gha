@@ -41,6 +41,7 @@ module.exports.patchMe = (req, res, next) => {
 
   user
     .findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
+    .select('-password')
     .then((data) => {
       if (data) {
         res.send({ data });
