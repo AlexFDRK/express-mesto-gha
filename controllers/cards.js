@@ -19,7 +19,7 @@ module.exports.deleteCard = (req, res, next) => {
         });
       } else if (data && data.owner.toString() !== req.user._id) {
         next(
-          new СustomError(NOT_OWNER_ERROR_TEXT, 403)
+          new СustomError(NOT_OWNER_ERROR_TEXT, 403),
         );
       } else {
         next(new СustomError(`${INCORRECT_ID_ERROR_TEXT} ${req.params.cardId}`, 404));
@@ -43,7 +43,7 @@ module.exports.likeCard = (req, res, next) => {
     .findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } },
-      { new: true }
+      { new: true },
     )
     .then((data) => {
       if (data) {
@@ -60,7 +60,7 @@ module.exports.dislikeCard = (req, res, next) => {
     .findByIdAndUpdate(
       req.params.cardId,
       { $pull: { likes: req.user._id } },
-      { new: true }
+      { new: true },
     )
     .then((data) => {
       if (data) {

@@ -18,7 +18,7 @@ router.post(
         .pattern(/(https?:\/\/)\w/),
     }),
   }),
-  createCard
+  createCard,
 );
 
 router.get('/', getCards);
@@ -30,7 +30,7 @@ router.delete(
       cardId: Joi.string().required().min(24).max(24),
     }),
   }),
-  deleteCard
+  deleteCard,
 );
 
 router.put(
@@ -40,7 +40,7 @@ router.put(
       cardId: Joi.string().required().min(24).max(24),
     }),
   }),
-  likeCard
+  likeCard,
 );
 
 router.delete(
@@ -50,7 +50,7 @@ router.delete(
       cardId: Joi.string().required().min(24).max(24),
     }),
   }),
-  dislikeCard
+  dislikeCard,
 );
 
 module.exports = router;
