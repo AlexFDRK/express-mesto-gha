@@ -15,7 +15,7 @@ router.get(
   celebrate({
     params: Joi.object().keys({ id: Joi.string().required().min(24).max(24) }),
   }),
-  findUserById
+  findUserById,
 );
 
 router.patch(
@@ -26,7 +26,7 @@ router.patch(
       about: Joi.string().min(2).max(30),
     }),
   }),
-  patchMe
+  patchMe,
 );
 
 router.patch(
@@ -38,7 +38,7 @@ router.patch(
       ),
     }),
   }),
-  patchAvatar
+  patchAvatar,
 );
 
 module.exports = router;
