@@ -18,7 +18,7 @@ module.exports.deleteCard = (req, res, next) => {
         });
       } else if (data && data.owner.toString() !== req.user._id) {
         next(
-          new СustomError('Нельзя удалять карточку чужого пользователя', 404)
+          new СustomError('Нельзя удалять карточку чужого пользователя', 403)
         );
       } else {
         next(new СustomError(`Попытка удаления данных с несуществующим id ${req.params.cardId}`, 404));
