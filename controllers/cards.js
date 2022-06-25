@@ -1,11 +1,11 @@
 const card = require('../models/card');
-const { errorHandler } = require('../middlewares/errorHandler');
+const СustomError = require('../utils/customError');
 
-module.exports.getCards = (_req, res) => {
+module.exports.getCards = (_req, res, next) => {
   card
     .find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => errorHandler(res));
+    .catch(() => next(new СustomError()));
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -17,11 +17,9 @@ module.exports.deleteCard = (req, res, next) => {
           res.send({ delData });
         });
       } else if (data && data.owner !== req.user) {
-        res
-          .status(404)
-          .send({ message: 'Нельзя удалять карточку чужого пользователя' });
+        next(new СustomError('Нельзя удалять карточку чужого пользователя', 404));
       } else {
-        next(req.params.cardId);
+        next(new СustomError(req.params.cardId, 404));
       }
     })
     .catch((err) => next(err));
@@ -48,7 +46,7 @@ module.exports.likeCard = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(req.params.cardId);
+        next(new СustomError(req.params.cardId, 404));
       }
     })
     .catch((err) => next(err));
@@ -65,7 +63,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(req.params.cardId);
+        next(new СustomError(req.params.cardId, 404));
       }
     })
     .catch((err) => next(err));
