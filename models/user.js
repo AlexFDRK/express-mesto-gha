@@ -1,8 +1,13 @@
-const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
+const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 
 function emailValidator(val) {
   const regex = /(\w|\-|\.)+@(\w)+.[a-zA-Z]{2,3}/;
+  return regex.test(val);
+}
+
+function linkValidator(val) {
+  const regex = /(https?:\/\/)(w{3}\.)?(\w|\-|\_)*.[a-zA-Z]{2,3}(\w|\W)*/;
   return regex.test(val);
 }
 
@@ -22,43 +27,27 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: [2, "Длина поля 'Имя пользователя' менее 2 символов"],
     maxlength: [30, "Длина поля 'Имя пользователя' более 30 символов"],
-    default: 'Жак-Ив Кусто',
+    default: "Жак-Ив Кусто",
   },
   about: {
     type: String,
     minlength: [2, "Длина поля 'О пользователе' менее 2 символов"],
     maxlength: [30, "Длина поля 'О пользователе' более 30 символов"],
-    default: 'Исследователь',
+    default: "Исследователь",
   },
   avatar: {
     type: String,
     default:
-      'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+      "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
+    validate: linkValidator,
   },
 });
 
-userSchema.set('toJSON', {
+userSchema.set("toJSON", {
   transform(doc, ret) {
     delete ret.password;
     return ret;
   },
 });
 
-// eslint-disable-next-line func-names
-userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).then((user) => {
-    if (!user) {
-      return Promise.reject(new Error('Неправильные почта или пароль'));
-    }
-
-    return bcrypt.compare(password, user.password).then((matched) => {
-      if (!matched) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-
-      return user;
-    });
-  });
-};
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
