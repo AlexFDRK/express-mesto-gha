@@ -5,12 +5,12 @@ const express = require('express');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 
-const { ERROR_404_CODE, ERROR_404_TEXT } = require('./utils/constants');
 const { login, createUser } = require('./controllers/login');
 const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
+const { ERROR_404_TEXT } = require('./utils/constants');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,14 +22,16 @@ app.post(
   '/signin',
   celebrate({
     body: Joi.object().keys({
-      email: Joi.string().required().email({
-        minDomainSegments: 2,
-        tlds: { allow: ['com', 'net', 'ru'] },
-      }),
+      email: Joi.string()
+        .required()
+        .email({
+          minDomainSegments: 2,
+          tlds: { allow: ['com', 'net', 'ru'] },
+        }),
       password: Joi.string().required().min(2),
     }),
   }),
-  login,
+  login
 );
 
 app.post(
@@ -46,11 +48,11 @@ app.post(
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
       avatar: Joi.string().pattern(
-        /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/,
+        /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/
       ),
     }),
   }),
-  createUser,
+  createUser
 );
 
 app.use(auth);
@@ -63,7 +65,7 @@ app.get('/', (_req, res) => {
 });
 
 app.use('*', (_req, res) => {
-  res.status(ERROR_404_CODE).send({ message: ERROR_404_TEXT });
+  res.status(404).send({ message: ERROR_404_TEXT });
 });
 
 app.use(errors());

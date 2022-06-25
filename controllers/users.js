@@ -1,5 +1,6 @@
 const user = require('../models/user');
 const СustomError = require('../utils/customError');
+const { INCORRECT_ID_ERROR_TEXT } = require('../utils/constants');
 
 module.exports.getUsers = (req, res, next) => {
   user
@@ -13,7 +14,7 @@ module.exports.findUserById = (req, res, next) => {
     .findById(req.params.id)
     .then((data) => {
       if (!data) {
-        next(new СustomError(`Запрошены данные с некорректным id ${req.params.id}`, 404));
+        next(new СustomError(`${INCORRECT_ID_ERROR_TEXT} ${req.params.id}`, 404));
       } else {
         res.send({ data });
       }

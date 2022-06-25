@@ -4,19 +4,13 @@ const jwt = require('jsonwebtoken');
 const user = require('../models/user');
 const СustomError = require('../utils/customError');
 
-const {
-  ERROR_401_CODE,
-  ERROR_403_CODE,
-  INCORRECT_PASSWORD,
-  INCORRECT_DATA_CODE,
-  JWT_SECRET,
-} = require('../utils/constants');
+const { AUTHORIZATION_ERROR_TEXT, JWT_SECRET } = require('../utils/constants');
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.status(INCORRECT_DATA_CODE).send({ message: INCORRECT_PASSWORD });
+    next(new СustomError('AUTHORIZATION_ERROR_TEXT', 400));
     return;
   }
 
@@ -25,7 +19,7 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .then((currentUser) => {
       if (!currentUser) {
-        return res.status(ERROR_401_CODE).send({ message: INCORRECT_PASSWORD });
+        return next(new СustomError(AUTHORIZATION_ERROR_TEXT, 401));
       }
       bcrypt.compare(password, currentUser.password, (error, isValid) => {
         if (error) {
@@ -44,7 +38,7 @@ module.exports.login = (req, res, next) => {
             .status(200)
             .send({ email: currentUser.email, name: currentUser.name });
         }
-        return next(new СustomError('Ошибочный пароль', 403));
+        return next(new СustomError(AUTHORIZATION_ERROR_TEXT, 403));
       });
     })
     .catch((err) => next(err));
@@ -65,13 +59,12 @@ module.exports.createUser = (req, res, next) => {
           password: hash,
         })
         .then((data) =>
-          res
-            .send({
-              name: data.name,
-              about: data.about,
-              avatar: data.avatar,
-              email: data.email,
-            })
+          res.send({
+            name: data.name,
+            about: data.about,
+            avatar: data.avatar,
+            email: data.email,
+          })
         )
         .catch((err) => next(new СustomError(err, 409)));
     })

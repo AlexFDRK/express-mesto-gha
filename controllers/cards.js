@@ -1,5 +1,6 @@
 const card = require('../models/card');
 const СustomError = require('../utils/customError');
+const { INCORRECT_ID_ERROR_TEXT, NOT_OWNER_ERROR_TEXT } = require('../utils/constants');
 
 module.exports.getCards = (_req, res, next) => {
   card
@@ -18,10 +19,10 @@ module.exports.deleteCard = (req, res, next) => {
         });
       } else if (data && data.owner.toString() !== req.user._id) {
         next(
-          new СustomError('Нельзя удалять карточку чужого пользователя', 403)
+          new СustomError(NOT_OWNER_ERROR_TEXT, 403)
         );
       } else {
-        next(new СustomError(`Попытка удаления данных с несуществующим id ${req.params.cardId}`, 404));
+        next(new СustomError(`${INCORRECT_ID_ERROR_TEXT} ${req.params.cardId}`, 404));
       }
     })
     .catch((err) => next(err));
