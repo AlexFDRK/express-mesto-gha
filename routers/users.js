@@ -19,18 +19,19 @@ router.get(
       about: Joi.string().min(2).max(30),
     }),
   }),
-  findUserById,
+  findUserById
 );
 router.patch('/me', patchMe);
 router.patch(
   '/me/avatar',
   celebrate({
-    params: Joi.object().keys({ id: Joi.string().required().min(24).max(24) }),
-    avatar: Joi.string().pattern(
-      /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/
-    ),
+    body: Joi.object().keys({
+      avatar: Joi.string().pattern(
+        /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/
+      ),
+    }),
   }),
-  patchAvatar,
+  patchAvatar
 );
 
 module.exports = router;
