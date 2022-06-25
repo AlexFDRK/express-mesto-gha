@@ -12,14 +12,16 @@ module.exports.deleteCard = (req, res, next) => {
   card
     .findOne({ _id: req.params.cardId })
     .then((data) => {
-      if (data && data.owner === req.user) {
+      if (data && data.owner.toString() === req.user._id) {
         card.findByIdAndRemove(req.params.cardId).then((delData) => {
           res.send({ delData });
         });
-      } else if (data && data.owner !== req.user) {
-        next(new СustomError('Нельзя удалять карточку чужого пользователя', 404));
+      } else if (data && data.owner.toString() !== req.user._id) {
+        next(
+          new СustomError('Нельзя удалять карточку чужого пользователя', 404)
+        );
       } else {
-        next(new СustomError(req.params.cardId, 404));
+        next(new СustomError(`Попытка удаления данных с несуществующим id ${req.params.cardId}`, 404));
       }
     })
     .catch((err) => next(err));
@@ -40,7 +42,7 @@ module.exports.likeCard = (req, res, next) => {
     .findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } },
-      { new: true },
+      { new: true }
     )
     .then((data) => {
       if (data) {
@@ -57,7 +59,7 @@ module.exports.dislikeCard = (req, res, next) => {
     .findByIdAndUpdate(
       req.params.cardId,
       { $pull: { likes: req.user._id } },
-      { new: true },
+      { new: true }
     )
     .then((data) => {
       if (data) {
