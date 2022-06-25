@@ -14,14 +14,21 @@ router.get(
   '/:id',
   celebrate({
     params: Joi.object().keys({ id: Joi.string().required().min(24).max(24) }),
+  }),
+  findUserById
+);
+
+router.patch(
+  '/me',
+  celebrate({
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
     }),
   }),
-  findUserById
+  patchMe
 );
-router.patch('/me', patchMe);
+
 router.patch(
   '/me/avatar',
   celebrate({
