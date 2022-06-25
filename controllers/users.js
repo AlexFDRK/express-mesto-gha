@@ -1,16 +1,16 @@
-const user = require('../models/user');
+const User = require('../models/user');
 const СustomError = require('../utils/customError');
 const { INCORRECT_ID_ERROR_TEXT } = require('../utils/constants');
 
 module.exports.getUsers = (req, res, next) => {
-  user
+  User
     .find({})
     .then((users) => res.send({ data: users }))
     .catch((err) => next(err));
 };
 
 module.exports.findUserById = (req, res, next) => {
-  user
+  User
     .findById(req.params.id)
     .then((data) => {
       if (!data) {
@@ -23,7 +23,7 @@ module.exports.findUserById = (req, res, next) => {
 };
 
 module.exports.getMe = (req, res, next) => {
-  user
+  User
     .findById(req.user)
     .select('-password')
     .then((data) => {
@@ -40,7 +40,7 @@ module.exports.patchMe = (req, res, next) => {
   const { name, about } = req.body;
   const _id = req.user;
 
-  user
+  User
     .findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
     .select('-password')
     .then((data) => {
@@ -57,7 +57,7 @@ module.exports.patchAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const _id = req.user;
 
-  user
+  User
     .findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
     .then((data) => {
       if (data) {

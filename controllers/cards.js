@@ -1,20 +1,20 @@
-const card = require('../models/card');
+const Card = require('../models/card');
 const СustomError = require('../utils/customError');
-const { INCORRECT_ID_ERROR_TEXT, NOT_OWNER_ERROR_TEXT } = require('../utils/constants');
+const { INCORRECT_ID_ERROR_TEXT, NOT_OWNER_ERROR_TEXT, DATA_NOT_FOUND_TEXT } = require('../utils/constants');
 
 module.exports.getCards = (_req, res, next) => {
-  card
+  Card
     .find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => next(new СustomError()));
+    .catch((err) => next(err));
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  card
+  Card
     .findOne({ _id: req.params.cardId })
     .then((data) => {
       if (data && data.owner.toString() === req.user._id) {
-        card.findByIdAndRemove(req.params.cardId).then((delData) => {
+        Card.findByIdAndRemove(req.params.cardId).then((delData) => {
           res.send({ delData });
         });
       } else if (data && data.owner.toString() !== req.user._id) {
@@ -22,7 +22,7 @@ module.exports.deleteCard = (req, res, next) => {
           new СustomError(NOT_OWNER_ERROR_TEXT, 403),
         );
       } else {
-        next(new СustomError(`${INCORRECT_ID_ERROR_TEXT} ${req.params.cardId}`, 404));
+        next(new СustomError(DATA_NOT_FOUND_TEXT, 404));
       }
     })
     .catch((err) => next(err));
@@ -32,14 +32,14 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const _id = req.user;
 
-  card
+  Card
     .create({ name, link, owner: _id })
-    .then((data) => res.send({ data }))
+    .then((data) => res.status(201).send({ data }))
     .catch((err) => next(err));
 };
 
 module.exports.likeCard = (req, res, next) => {
-  card
+  Card
     .findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } },
@@ -49,14 +49,14 @@ module.exports.likeCard = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(new СustomError(req.params.cardId, 404));
+        next(new СustomError(`${INCORRECT_ID_ERROR_TEXT} ${req.params.cardId}`, 404));
       }
     })
     .catch((err) => next(err));
 };
 
 module.exports.dislikeCard = (req, res, next) => {
-  card
+  Card
     .findByIdAndUpdate(
       req.params.cardId,
       { $pull: { likes: req.user._id } },
@@ -66,7 +66,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(new СustomError(req.params.cardId, 404));
+        next(new СustomError(`${INCORRECT_ID_ERROR_TEXT} ${req.params.cardId}`, 404));
       }
     })
     .catch((err) => next(err));

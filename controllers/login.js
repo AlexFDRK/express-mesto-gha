@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
-const user = require('../models/user');
+const User = require('../models/user');
 const СustomError = require('../utils/customError');
 
 const { AUTHORIZATION_ERROR_TEXT, JWT_SECRET } = require('../utils/constants');
@@ -9,13 +9,7 @@ const { AUTHORIZATION_ERROR_TEXT, JWT_SECRET } = require('../utils/constants');
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    next(new СustomError('AUTHORIZATION_ERROR_TEXT', 400));
-    return;
-  }
-
-  user
-    .findOne({ email })
+  User.findOne({ email })
     .select('+password')
     .then((currentUser) => {
       if (!currentUser) {
@@ -50,23 +44,15 @@ module.exports.createUser = (req, res, next) => {
   bcrypt
     .hash(password, 10)
     .then((hash) => {
-      user
-        .create({
-          name,
-          about,
-          avatar,
-          email,
-          password: hash,
-        })
-        .then((data) =>
-          res.send({
-            name: data.name,
-            about: data.about,
-            avatar: data.avatar,
-            email: data.email,
-          })
-        )
-        .catch((err) => next(new СustomError(err, 409)));
+      User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      })
+        .then((data) => res.status(201).send(data))
+        .catch((err) => next(err));
     })
     .catch((err) => next(err));
 };

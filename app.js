@@ -11,6 +11,7 @@ const { auth } = require('./middlewares/auth');
 const { PORT = 3000 } = process.env;
 const app = express();
 const { ERROR_404_TEXT } = require('./utils/constants');
+const { listenerCount } = require('./models/user');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,7 +32,7 @@ app.post(
       password: Joi.string().required().min(2),
     }),
   }),
-  login,
+  login
 );
 
 app.post(
@@ -50,7 +51,7 @@ app.post(
       avatar: Joi.string().pattern(/(https?:\/\/)\w/),
     }),
   }),
-  createUser,
+  createUser
 );
 
 app.use(auth);
@@ -69,7 +70,16 @@ app.use('*', (_req, res) => {
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  let statusCode;
+  const { message } = err;
+
+  if (err && err.code === 11000) {
+    statusCode = 409;
+  } else if (err && !err.statusCode) {
+    statusCode = 500;
+  } else {
+    statusCode = err.statusCode;
+  }
 
   res.status(statusCode).send({
     message,
