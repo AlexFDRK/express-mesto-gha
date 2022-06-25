@@ -1,11 +1,17 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
+function emailValidator(val) {
+  const regex = /(\w|\-|\.)+@(\w)+.[a-zA-Z]{2,3}/;
+  return regex.test(val);
+}
+
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Поле 'email' - не заполнено"],
     unique: [true, "Поле 'email' - не уникально"],
+    validate: emailValidator,
   },
   password: {
     type: String,

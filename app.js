@@ -11,7 +11,6 @@ const { auth } = require('./middlewares/auth');
 const { PORT = 3000 } = process.env;
 const app = express();
 const { ERROR_404_TEXT } = require('./utils/constants');
-const { listenerCount } = require('./models/user');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,7 +31,7 @@ app.post(
       password: Joi.string().required().min(2),
     }),
   }),
-  login
+  login,
 );
 
 app.post(
@@ -48,20 +47,16 @@ app.post(
       password: Joi.string().required().min(2),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(/(https?:\/\/)\w/),
+      avatar: Joi.string().pattern(/(https?:\/\/)(w{3}\.)?(\w|\-|\_)*.[a-zA-Z]{2,3}(\w|\W)*/),
     }),
   }),
-  createUser
+  createUser,
 );
 
 app.use(auth);
 
 app.use('/users', require('./routers/users'));
 app.use('/cards', require('./routers/cards'));
-
-app.get('/', (_req, res) => {
-  res.send({ message: 'Main page' });
-});
 
 app.use('*', (_req, res) => {
   res.status(404).send({ message: ERROR_404_TEXT });
@@ -75,10 +70,10 @@ app.use((err, req, res, next) => {
 
   if (err && err.code === 11000) {
     statusCode = 409;
-  } else if (err && !err.statusCode) {
-    statusCode = 500;
-  } else {
+  } else if (err && err.statusCode) {
     statusCode = err.statusCode;
+  } else {
+    statusCode = 500;
   }
 
   res.status(statusCode).send({
