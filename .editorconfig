@@ -5,5 +5,5 @@ root = true // Указывает, что текущий корневой кат
  indent_style = space // Стиль отступа клавиши Tab состоит из пробела и таблицы. Общий код - пробел
  indent_size = 2 // размер отступа 2
  end_of_line = lf // обернуть с lf, по умолчанию выигрыш - crlf mac, а linux - lf
- insert_final_newline = true // добавляем пустую строку в конец
- trim_trailing_whitespace = false
+ insert_final_newline = true
+ trim_trailing_whitespace = true
