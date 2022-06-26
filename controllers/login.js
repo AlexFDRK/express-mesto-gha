@@ -15,7 +15,7 @@ module.exports.login = (req, res, next) => {
       if (!currentUser) {
         return next(new СustomError(AUTHORIZATION_ERROR_TEXT, 401));
       }
-      bcrypt.compare(password, currentUser.password, (error, isValid) => {
+      return bcrypt.compare(password, currentUser.password, (error, isValid) => {
         if (error) {
           return next(error);
         }
