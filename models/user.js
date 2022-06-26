@@ -1,5 +1,4 @@
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 function emailValidator(val) {
   const regex = /(\w|\-|\.)+@(\w)+.[a-zA-Z]{2,3}/;
@@ -27,27 +26,29 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: [2, "Длина поля 'Имя пользователя' менее 2 символов"],
     maxlength: [30, "Длина поля 'Имя пользователя' более 30 символов"],
-    default: "Жак-Ив Кусто",
+    default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
     minlength: [2, "Длина поля 'О пользователе' менее 2 символов"],
     maxlength: [30, "Длина поля 'О пользователе' более 30 символов"],
-    default: "Исследователь",
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
     default:
-      "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
+      'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: linkValidator,
   },
 });
 
-userSchema.set("toJSON", {
+userSchema.set('toJSON', {
   transform(doc, ret) {
-    delete ret.password;
-    return ret;
+    const rett = ret;
+
+    delete rett.password;
+    return rett;
   },
 });
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model('user', userSchema);

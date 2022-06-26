@@ -15,15 +15,15 @@ module.exports.login = (req, res, next) => {
       if (!currentUser) {
         return next(new СustomError(AUTHORIZATION_ERROR_TEXT, 401));
       }
-      bcrypt.compare(password, currentUser.password, (error, isValid) => {
+      return bcrypt.compare(password, currentUser.password, (error, isValid) => {
         if (error) {
-          return next(error);
+          next(error);
         }
         if (isValid) {
           const token = jwt.sign({ _id: currentUser._id }, JWT_SECRET, {
             expiresIn: '7d',
           });
-          return res
+          res
             .cookie('jwt', token, {
               httpOnly: true,
               secure: false, // https
@@ -32,14 +32,16 @@ module.exports.login = (req, res, next) => {
             .status(200)
             .send({ email: currentUser.email, name: currentUser.name });
         }
-        return next(new СustomError(AUTHORIZATION_ERROR_TEXT, 404));
+        next(new СustomError(AUTHORIZATION_ERROR_TEXT, 404));
       });
     })
     .catch((err) => next(err));
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
   bcrypt
     .hash(password, 10)

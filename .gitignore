@@ -16,5 +16,6 @@ node_modules
 
 # Additional modules
 .prettierrc
+.eslintrc.json
 
 README.md

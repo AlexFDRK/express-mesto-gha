@@ -1,10 +1,10 @@
-const Card = require("../models/card");
-const СustomError = require("../utils/customError");
+const Card = require('../models/card');
+const СustomError = require('../utils/customError');
 const {
   MISSING_ID_ERROR_TEXT,
   NOT_OWNER_ERROR_TEXT,
   DATA_NOT_FOUND_TEXT,
-} = require("../utils/constants");
+} = require('../utils/constants');
 
 module.exports.getCards = (_req, res, next) => {
   Card.find({})
@@ -41,7 +41,7 @@ module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((data) => {
       if (data) {
@@ -57,7 +57,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((data) => {
       if (data) {
