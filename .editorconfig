@@ -6,4 +6,4 @@ root = true // Указывает, что текущий корневой кат
  indent_size = 2 // размер отступа 2
  end_of_line = lf // обернуть с lf, по умолчанию выигрыш - crlf mac, а linux - lf
  insert_final_newline = true // добавляем пустую строку в конец
- trim_trailing_whitespace = true // удаляем лишние пробелы в конце строки
+ trim_trailing_whitespace = false
