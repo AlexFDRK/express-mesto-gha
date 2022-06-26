@@ -7,3 +7,4 @@ root = true // Указывает, что текущий корневой кат
  end_of_line = lf // обернуть с lf, по умолчанию выигрыш - crlf mac, а linux - lf
  insert_final_newline = true
  trim_trailing_whitespace = true
+ trim_trailing_whitespace = false
