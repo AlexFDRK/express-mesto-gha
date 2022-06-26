@@ -32,7 +32,7 @@ module.exports.login = (req, res, next) => {
             .status(200)
             .send({ email: currentUser.email, name: currentUser.name });
         }
-        return next(new СustomError(AUTHORIZATION_ERROR_TEXT, 403));
+        return next(new СustomError(AUTHORIZATION_ERROR_TEXT, 404));
       });
     })
     .catch((err) => next(err));
@@ -52,7 +52,13 @@ module.exports.createUser = (req, res, next) => {
         password: hash,
       })
         .then((data) => res.status(201).send(data))
-        .catch((err) => next(err));
+        .catch((err) => {
+          if (err.code === 11000) {
+            next(new СustomError(err, 409));
+          } else {
+            next(err);
+          }
+        });
     })
     .catch((err) => next(err));
 };

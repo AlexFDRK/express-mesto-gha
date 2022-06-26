@@ -65,16 +65,7 @@ app.use('*', (_req, res) => {
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  let statusCode;
-  const { message } = err;
-
-  if (err && err.code === 11000) {
-    statusCode = 409;
-  } else if (err && err.statusCode) {
-    statusCode = err.statusCode;
-  } else {
-    statusCode = 500;
-  }
+  const { statusCode = 500, message } = err;
 
   res.status(statusCode).send({
     message,
