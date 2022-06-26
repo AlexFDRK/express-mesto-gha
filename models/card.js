@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 function linkValidator(val) {
-  const regex = /(https?:\/\/)(w{3}\.)?(\w|\-|\_)*.[a-zA-Z]{2,3}(\w|\W)*/;
+  const regex = /(https?:\/\/)(w{3}\.)?(\w|-|_)*.[a-zA-Z]{2,3}(\w|\W)*/;
   return regex.test(val);
 }
 

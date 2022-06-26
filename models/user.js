@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 function emailValidator(val) {
-  const regex = /(\w|\-|\.)+@(\w)+.[a-zA-Z]{2,3}/;
+  const regex = /(\w|-|\.)+@(\w)+.[a-zA-Z]{2,3}/;
   return regex.test(val);
 }
 
 function linkValidator(val) {
-  const regex = /(https?:\/\/)(w{3}\.)?(\w|\-|\_)*.[a-zA-Z]{2,3}(\w|\W)*/;
+  const regex = /(https?:\/\/)(w{3}\.)?(\w|-|_)*.[a-zA-Z]{2,3}(\w|\W)*/;
   return regex.test(val);
 }
 
