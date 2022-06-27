@@ -10,7 +10,7 @@ const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-const { ERROR_404_TEXT } = require('./utils/constants');
+const { ERROR_404_TEXT, ERROR_404 } = require('./utils/constants');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -59,7 +59,7 @@ app.use('/users', require('./routers/users'));
 app.use('/cards', require('./routers/cards'));
 
 app.use('*', (_req, res) => {
-  res.status(404).send({ message: ERROR_404_TEXT });
+  res.status(ERROR_404).send({ message: ERROR_404_TEXT });
 });
 
 app.use(errors());

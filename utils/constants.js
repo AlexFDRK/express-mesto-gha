@@ -5,6 +5,12 @@ const NOT_OWNER_ERROR_TEXT = 'Нельзя удалять или модифиц�
 const DATA_NOT_FOUND_TEXT = 'Запрашиваемые данные не найдены';
 const JWT_SECRET = 'some-secret-key';
 
+const ERROR_400 = 400;
+const ERROR_401 = 401;
+const ERROR_403 = 403;
+const ERROR_404 = 404;
+const ERROR_409 = 409;
+
 module.exports = {
   AUTHORIZATION_ERROR_TEXT,
   JWT_SECRET,
@@ -12,4 +18,9 @@ module.exports = {
   MISSING_ID_ERROR_TEXT,
   NOT_OWNER_ERROR_TEXT,
   DATA_NOT_FOUND_TEXT,
+  ERROR_400,
+  ERROR_401,
+  ERROR_403,
+  ERROR_404,
+  ERROR_409,
 };

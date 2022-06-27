@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const СustomError = require('../utils/customError');
-const { MISSING_ID_ERROR_TEXT } = require('../utils/constants');
+const { MISSING_ID_ERROR_TEXT, ERROR_404 } = require('../utils/constants');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -12,7 +12,7 @@ module.exports.findUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then((data) => {
       if (!data) {
-        next(new СustomError(MISSING_ID_ERROR_TEXT, 404));
+        next(new СustomError(MISSING_ID_ERROR_TEXT, ERROR_404));
       } else {
         res.send({ data });
       }
@@ -24,7 +24,7 @@ module.exports.getMe = (req, res, next) => {
   User.findById(req.user)
     .then((data) => {
       if (!data) {
-        next(new СustomError(MISSING_ID_ERROR_TEXT, 404));
+        next(new СustomError(MISSING_ID_ERROR_TEXT, ERROR_404));
       } else {
         res.send({ data });
       }
@@ -45,7 +45,7 @@ module.exports.patchMe = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(new СustomError(MISSING_ID_ERROR_TEXT, 404));
+        next(new СustomError(MISSING_ID_ERROR_TEXT, ERROR_404));
       }
     })
     .catch((err) => next(err));
@@ -60,7 +60,7 @@ module.exports.patchAvatar = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(new СustomError(MISSING_ID_ERROR_TEXT, 404));
+        next(new СustomError(MISSING_ID_ERROR_TEXT, ERROR_404));
       }
     })
     .catch((err) => next(err));

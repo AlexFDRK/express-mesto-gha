@@ -4,6 +4,8 @@ const {
   MISSING_ID_ERROR_TEXT,
   NOT_OWNER_ERROR_TEXT,
   DATA_NOT_FOUND_TEXT,
+  ERROR_403,
+  ERROR_404,
 } = require('../utils/constants');
 
 module.exports.getCards = (_req, res, next) => {
@@ -20,9 +22,9 @@ module.exports.deleteCard = (req, res, next) => {
           res.send({ delData });
         });
       } else if (data && data.owner.toString() !== req.user._id) {
-        next(new СustomError(NOT_OWNER_ERROR_TEXT, 403));
+        next(new СustomError(NOT_OWNER_ERROR_TEXT, ERROR_403));
       } else {
-        next(new СustomError(DATA_NOT_FOUND_TEXT, 404));
+        next(new СustomError(DATA_NOT_FOUND_TEXT, ERROR_404));
       }
     })
     .catch((err) => next(err));
@@ -47,7 +49,7 @@ module.exports.likeCard = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(new СustomError(MISSING_ID_ERROR_TEXT, 404));
+        next(new СustomError(MISSING_ID_ERROR_TEXT, ERROR_404));
       }
     })
     .catch((err) => next(err));
@@ -63,7 +65,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (data) {
         res.send({ data });
       } else {
-        next(new СustomError(MISSING_ID_ERROR_TEXT, 404));
+        next(new СustomError(MISSING_ID_ERROR_TEXT, ERROR_404));
       }
     })
     .catch((err) => next(err));
