@@ -5,12 +5,15 @@ const express = require('express');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 
-const { login, createUser } = require('./controllers/login');
 const { auth } = require('./middlewares/auth');
+const { login, createUser } = require('./controllers/login');
+const { permissions } = require('./middlewares/permissions');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 const { ERROR_404_TEXT, ERROR_404 } = require('./utils/constants');
+
+app.use(permissions);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
