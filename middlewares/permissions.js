@@ -16,6 +16,8 @@ const permissions = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', origin);
   }
 
+  res.header('Access-Control-Allow-Origin', '*'); //Разрешаем всё всем
+
   const requestHeaders = req.headers['access-control-request-headers'];
 
   if (method === 'OPTIONS') {
