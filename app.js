@@ -14,10 +14,20 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const { ERROR_404_TEXT, ERROR_404 } = require('./utils/constants');
 
+const allowedCors = [
+  'http://mesto.alexfdrk.nomoreparties.sbs',
+  'https://mesto.alexfdrk.nomoreparties.sbs',
+  'http://localhost:3000',
+  'https://localhost:3000',
+];
+
 //app.use(permissions);
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: allowedCors,
+  credentials: true,
+}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
