@@ -5,17 +5,19 @@ const express = require('express');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 
+const cors = require('cors');
 const { auth } = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/login');
-const { permissions } = require('./middlewares/permissions');
+//const { permissions } = require('./middlewares/permissions');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 const { ERROR_404_TEXT, ERROR_404 } = require('./utils/constants');
 
-app.use(permissions);
+//app.use(permissions);
 
 app.use(bodyParser.json());
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -34,7 +36,7 @@ app.post(
       password: Joi.string().required().min(2),
     }),
   }),
-  login,
+  login
 );
 
 app.post(
@@ -50,10 +52,12 @@ app.post(
       password: Joi.string().required().min(2),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(/(https?:\/\/)(w{3}\.)?(\w|-|_)*.[a-zA-Z]{2,3}(\w|\W)*/),
+      avatar: Joi.string().pattern(
+        /(https?:\/\/)(w{3}\.)?(\w|-|_)*.[a-zA-Z]{2,3}(\w|\W)*/
+      ),
     }),
   }),
-  createUser,
+  createUser
 );
 
 app.use(auth);
@@ -76,5 +80,4 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {
-});
+app.listen(PORT, () => {});
