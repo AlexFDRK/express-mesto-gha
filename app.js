@@ -26,12 +26,13 @@ const allowedCors = [
 //app.use(permissions);
 
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: allowedCors,
-    credentials: true,
-  })
-);
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: allowedCors,
+//     credentials: true,
+//   })
+// );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
