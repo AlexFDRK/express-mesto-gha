@@ -38,45 +38,45 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 
-app.post(
-  '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string()
-        .required()
-        .email({
-          minDomainSegments: 2,
-          tlds: { allow: ['com', 'net', 'ru'] },
-        }),
-      password: Joi.string().required().min(2),
-    }),
-  }),
-  login
-);
+// app.post(
+//   '/signin',
+//   celebrate({
+//     body: Joi.object().keys({
+//       email: Joi.string()
+//         .required()
+//         .email({
+//           minDomainSegments: 2,
+//           tlds: { allow: ['com', 'net', 'ru'] },
+//         }),
+//       password: Joi.string().required().min(2),
+//     }),
+//   }),
+//   login
+// );
 
-app.use(permissions);
+//app.use(permissions);
 //app.use(cors());
 
-app.post(
-  '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string()
-        .required()
-        .email({
-          minDomainSegments: 2,
-          tlds: { allow: ['com', 'net', 'ru'] },
-        }),
-      password: Joi.string().required().min(2),
-      name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(
-        /(https?:\/\/)(w{3}\.)?(\w|-|_)*.[a-zA-Z]{2,3}(\w|\W)*/
-      ),
-    }),
-  }),
-  createUser
-);
+// app.post(
+//   '/signup',
+//   celebrate({
+//     body: Joi.object().keys({
+//       email: Joi.string()
+//         .required()
+//         .email({
+//           minDomainSegments: 2,
+//           tlds: { allow: ['com', 'net', 'ru'] },
+//         }),
+//       password: Joi.string().required().min(2),
+//       name: Joi.string().min(2).max(30),
+//       about: Joi.string().min(2).max(30),
+//       avatar: Joi.string().pattern(
+//         /(https?:\/\/)(w{3}\.)?(\w|-|_)*.[a-zA-Z]{2,3}(\w|\W)*/
+//       ),
+//     }),
+//   }),
+//   createUser
+// );
 
 app.use(auth);
 
