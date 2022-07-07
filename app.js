@@ -8,6 +8,7 @@ const { errors } = require('celebrate');
 const cors = require('cors');
 const { auth } = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/login');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 //const { permissions } = require('./middlewares/permissions');
 
 const { PORT = 3000 } = process.env;
@@ -24,14 +25,18 @@ const allowedCors = [
 //app.use(permissions);
 
 app.use(bodyParser.json());
-app.use(cors({
-  origin: allowedCors,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: allowedCors,
+    credentials: true,
+  })
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
+
+app.use(requestLogger);
 
 app.post(
   '/signin',
@@ -79,6 +84,7 @@ app.use('*', (_req, res) => {
   res.status(ERROR_404).send({ message: ERROR_404_TEXT });
 });
 
+app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
