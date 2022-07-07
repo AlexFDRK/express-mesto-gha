@@ -9,7 +9,7 @@ const cors = require('cors');
 const { auth } = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/login');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-//const { permissions } = require('./middlewares/permissions');
+const { permissions } = require('./middlewares/permissions');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -23,8 +23,6 @@ const allowedCors = [
   'http://localhost:3000',
   'https://localhost:3000',
 ];
-
-//app.use(permissions);
 
 app.use(bodyParser.json());
 // app.use(
@@ -56,6 +54,7 @@ app.post(
   login
 );
 
+app.use(permissions);
 //app.use(cors());
 
 app.post(
