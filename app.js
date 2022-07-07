@@ -18,6 +18,7 @@ const { ERROR_404_TEXT, ERROR_404 } = require('./utils/constants');
 const allowedCors = [
   'http://mesto.alexfdrk.nomoreparties.sbs',
   'https://mesto.alexfdrk.nomoreparties.sbs',
+  'api.alexfdrk.nomoredomains.xyz',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
