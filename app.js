@@ -56,7 +56,7 @@ app.post(
   login
 );
 
-app.use(cors());
+//app.use(cors());
 
 app.post(
   '/signup',
