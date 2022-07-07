@@ -18,7 +18,8 @@ const { ERROR_404_TEXT, ERROR_404 } = require('./utils/constants');
 const allowedCors = [
   'http://mesto.alexfdrk.nomoreparties.sbs',
   'https://mesto.alexfdrk.nomoreparties.sbs',
-  'api.alexfdrk.nomoredomains.xyz',
+  'http://api.alexfdrk.nomoredomains.xyz',
+  'https://api.alexfdrk.nomoredomains.xyz',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
@@ -26,7 +27,6 @@ const allowedCors = [
 //app.use(permissions);
 
 app.use(bodyParser.json());
-app.use(cors());
 // app.use(
 //   cors({
 //     origin: allowedCors,
@@ -39,6 +39,8 @@ app.use(cookieParser());
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(requestLogger);
+
+app.use(cors());
 
 app.post(
   '/signin',
