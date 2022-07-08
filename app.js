@@ -16,21 +16,21 @@ const app = express();
 const { ERROR_404_TEXT, ERROR_404 } = require('./utils/constants');
 
 const allowedCors = [
+  'https://praktikum.tk',
+  'http://praktikum.tk',
   'http://mesto.alexfdrk.nomoreparties.sbs',
   'https://mesto.alexfdrk.nomoreparties.sbs',
   'http://api.alexfdrk.nomoredomains.xyz',
   'https://api.alexfdrk.nomoredomains.xyz',
+  'http://api.alexfdrk.nomoredomains.xyz/users/me',
+  'https://api.alexfdrk.nomoredomains.xyz/users/me',
+  'http://api.alexfdrk.nomoredomains.xyz/cards',
+  'https://api.alexfdrk.nomoredomains.xyz/cards',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
 
 app.use(bodyParser.json());
-// app.use(
-//   cors({
-//     origin: allowedCors,
-//     credentials: true,
-//   })
-// );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -38,7 +38,13 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(requestLogger);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedCors,
+    credentials: true,
+  }),
+);
+//app.use(cors());
 // app.use(permissions);
 
 app.post(
