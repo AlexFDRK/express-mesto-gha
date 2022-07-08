@@ -38,7 +38,7 @@ module.exports.login = (req, res, next) => {
                 sameSite: false,
               })
               .status(200)
-              .send({ email: currentUser.email, name: currentUser.name });
+              .send({ email: currentUser.email, name: currentUser.name, jwt: token });
           }
           return next(new СustomError(AUTHORIZATION_ERROR_TEXT, ERROR_401));
         },
