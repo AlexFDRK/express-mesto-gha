@@ -5,6 +5,10 @@ const allowedCors = [
   'https://mesto.alexfdrk.nomoreparties.sbs',
   'http://api.alexfdrk.nomoredomains.xyz',
   'https://api.alexfdrk.nomoredomains.xyz',
+  'http://api.alexfdrk.nomoredomains.xyz/users/me',
+  'https://api.alexfdrk.nomoredomains.xyz/users/me',
+  'http://api.alexfdrk.nomoredomains.xyz/cards',
+  'https://api.alexfdrk.nomoredomains.xyz/cards',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
