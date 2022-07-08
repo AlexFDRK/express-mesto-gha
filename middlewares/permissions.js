@@ -1,9 +1,12 @@
 const allowedCors = [
   'https://praktikum.tk',
   'http://praktikum.tk',
-  'https://mesto.alexfdrk.nomoreparties.sbs',
   'http://mesto.alexfdrk.nomoreparties.sbs',
-  'localhost:3000',
+  'https://mesto.alexfdrk.nomoreparties.sbs',
+  'http://api.alexfdrk.nomoredomains.xyz',
+  'https://api.alexfdrk.nomoredomains.xyz',
+  'http://localhost:3000',
+  'https://localhost:3000',
 ];
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';

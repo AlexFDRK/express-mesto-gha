@@ -38,7 +38,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(requestLogger);
 
-app.use(cors());
+//app.use(cors());
+app.use(permissions);
 
 app.post(
   '/signin',
@@ -55,8 +56,6 @@ app.post(
   }),
   login
 );
-
-//app.use(permissions);
 
 app.post(
   '/signup',
