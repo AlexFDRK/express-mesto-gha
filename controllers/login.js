@@ -13,7 +13,6 @@ const {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-
   User.findOne({ email })
     .select('+password')
     .then((currentUser) => {
@@ -34,23 +33,25 @@ module.exports.login = (req, res, next) => {
             return res
               .cookie('jwt', token, {
                 httpOnly: true,
-                secure: false, // https
-                sameSite: false,
+                sameSite: 'None',
+                secure: true,
               })
               .status(200)
-              .send({ email: currentUser.email, name: currentUser.name, jwt: token });
+              .send({
+                email: currentUser.email,
+                name: currentUser.name,
+                token,
+              });
           }
           return next(new СustomError(AUTHORIZATION_ERROR_TEXT, ERROR_401));
-        },
+        }
       );
     })
     .catch((err) => next(err));
 };
 
 module.exports.createUser = (req, res, next) => {
-  const {
-    name, about, avatar, email, password,
-  } = req.body;
+  const { name, about, avatar, email, password } = req.body;
 
   bcrypt
     .hash(password, 10)

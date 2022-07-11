@@ -26,9 +26,14 @@ const allowedCors = [
   'https://api.alexfdrk.nomoredomains.xyz/users/me',
   'http://api.alexfdrk.nomoredomains.xyz/cards',
   'https://api.alexfdrk.nomoredomains.xyz/cards',
-  'http://localhost:3000',
-  'https://localhost:3000',
+  'http://localhost:3001',
+  'https://localhost:3001',
 ];
+
+const corsOptions = {
+  origin: true, //included origin as true
+  credentials: true, //included credentials as true
+};
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,26 +47,10 @@ app.use(
   cors({
     origin: allowedCors,
     credentials: true,
-  }),
+  })
 );
 //app.use(cors());
 // app.use(permissions);
-
-app.post(
-  '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string()
-        .required()
-        .email({
-          minDomainSegments: 2,
-          tlds: { allow: ['com', 'net', 'ru'] },
-        }),
-      password: Joi.string().required().min(2),
-    }),
-  }),
-  login
-);
 
 app.post(
   '/signup',
@@ -82,6 +71,22 @@ app.post(
     }),
   }),
   createUser
+);
+
+app.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string()
+        .required()
+        .email({
+          minDomainSegments: 2,
+          tlds: { allow: ['com', 'net', 'ru'] },
+        }),
+      password: Joi.string().required().min(2),
+    }),
+  }),
+  login
 );
 
 app.use(auth);
@@ -105,4 +110,6 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {});
+app.listen(PORT, () => {
+  console.log(`Сервер запущен PORT:${PORT}`);
+});
